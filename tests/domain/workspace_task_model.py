@@ -2,7 +2,7 @@ from uuid import UUID
 import pytest
 from datetime import datetime
 
-from domain.models.workspaces import Workspace
+from domain.models.workspace import Workspace
 
 
 def test_workspace_creation():
