@@ -8,7 +8,7 @@ from sqlalchemy.sql import Select
 from sqlalchemy.exc import SQLAlchemyError
 
 from core.logging import get_logger
-from domain.models.workspaces import Workspace
+from domain.models.workspace import Workspace
 from domain.exceptions import WorkspaceNotFoundError, DatabaseError
 
 logger = get_logger(__name__)

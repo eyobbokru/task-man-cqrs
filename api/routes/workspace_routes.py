@@ -1,7 +1,7 @@
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Path, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from domain.models.workspaces import Workspace
+from domain.models.workspace import Workspace
 from infrastructure.database import get_session
 
 from application.commands.workspace_commands import CreateWorkspaceCommand, DeleteWorkspaceCommand, UpdateWorkspaceCommand

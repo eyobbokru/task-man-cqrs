@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 from  datetime  import datetime, timezone
 from sqlalchemy.exc import IntegrityError
 from domain.exceptions import DatabaseError, WorkspaceNotFoundError, WorkspacePermissionError, WorkspaceValidationError
-from domain.models.workspaces import Workspace
+from domain.models.workspace import Workspace
 from sqlalchemy.ext.asyncio import AsyncSession
 
 logger = get_logger(__name__)

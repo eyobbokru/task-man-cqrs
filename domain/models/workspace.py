@@ -2,9 +2,9 @@ from uuid import UUID as UUID_TYPE
 from datetime import datetime, timezone
 from typing import Optional, Dict, Any
 
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, JSON
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, DateTime, JSON
 from sqlalchemy.dialects.postgresql import UUID, JSONB
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates,relationship
 from sqlalchemy.sql import expression
 
 from infrastructure.database import Base
@@ -67,6 +67,10 @@ class Workspace(Base):
         onupdate=lambda: datetime.now(timezone.utc)
     )
 
+    # Add to Workspace class
+    teams = relationship("Team", back_populates="workspace")
+    members = relationship("WorkspaceMember", back_populates="workspace")
+
     # Validation methods
     @validates('title')
     def validate_title(self, key: str, title: str) -> str:
@@ -95,3 +99,65 @@ class Workspace(Base):
     def __repr__(self) -> str:
         """Return string representation of the workspace."""
         return f"<Workspace(id={self.id}, title='{self.title}', plan_type='{self.plan_type}')>"
+    
+class WorkspaceMember(Base):
+    """
+    Represents a workspace membership entity in the system.
+    
+    Links users to workspaces with specific roles and permissions.
+    """
+    __tablename__ = "workspace_members"
+    
+    # Primary and Foreign Keys
+    id = Column(UUID(as_uuid=True), primary_key=True, index=True)
+    workspace_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey('workspaces.id'),
+        nullable=False,
+        index=True
+    )
+    user_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey('users.id'),
+        nullable=False,
+        index=True
+    )
+    
+    # Role and Permissions
+    role = Column(
+        String(50),
+        nullable=False,
+        default='member',
+        server_default='member'
+    )
+    
+    # Timestamps
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc)
+    )
+    updated_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc)
+    )
+
+    # Relationships
+    workspace = relationship("Workspace", back_populates="members")
+    user = relationship("User", back_populates="workspace_memberships")
+
+    # Class variables
+    VALID_ROLES = {'owner', 'admin', 'member'}
+
+    @validates('role')
+    def validate_role(self, key: str, role: str) -> str:
+        """Validate the workspace member role."""
+        if role not in self.VALID_ROLES:
+            raise ValueError(f"Invalid role. Must be one of: {', '.join(self.VALID_ROLES)}")
+        return role
+
+    def __repr__(self) -> str:
+        """Return string representation of the workspace membership."""
+        return f"<WorkspaceMember(workspace_id='{self.workspace_id}', user_id='{self.user_id}', role='{self.role}')>"
