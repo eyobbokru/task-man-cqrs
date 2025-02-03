@@ -85,9 +85,9 @@ class User(Base):
 
     # Relationships
     workspace_memberships = relationship("WorkspaceMember", back_populates="user")
+    owned_teams = relationship("Team", foreign_keys=[Team.owner_id], back_populates="owner")
     team_memberships = relationship("TeamMember", back_populates="user")
-    owned_teams = relationship("Team", foreign_keys=[Team.owner_id])
-   
+
     # Validation methods
     @validates('email')
     def validate_email(self, key: str, email: str) -> str:

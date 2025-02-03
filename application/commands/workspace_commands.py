@@ -7,6 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from domain.exceptions import DatabaseError, WorkspaceNotFoundError, WorkspacePermissionError, WorkspaceValidationError
 from domain.models.workspace import Workspace
 from sqlalchemy.ext.asyncio import AsyncSession
+from infrastructure.repositories.workspace_repository import WorkspaceRepository
 
 logger = get_logger(__name__)
 
