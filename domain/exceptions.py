@@ -21,3 +21,12 @@ class WorkspaceLimitError(WorkspaceError):
 class DatabaseError(Exception):
     """Raised when workspace validation fails."""
     pass
+
+
+class NotFoundException(Exception):
+    """Raised when workspace validation fails."""
+    pass
+
+class ValidationError(Exception):
+    """Raised when workspace validation fails."""
+    pass

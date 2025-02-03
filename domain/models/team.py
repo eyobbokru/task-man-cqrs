@@ -39,8 +39,10 @@ class Team(Base):
     )
     owner_id = Column(
         UUID(as_uuid=True),
+        ForeignKey('users.id', ondelete='SET NULL'),
         nullable=False,
-        index=True
+        index=True,
+
     )
     
     # Basic fields
@@ -78,9 +80,9 @@ class Team(Base):
 
     # Relationships
     workspace = relationship("Workspace", back_populates="teams")
-    owner = relationship("User", foreign_keys=[owner_id])
-    members = relationship("TeamMember", back_populates="team")
-
+    owner = relationship("User", foreign_keys=[owner_id], back_populates="owned_teams")
+    members = relationship("TeamMember", back_populates="team", cascade="all, delete-orphan")
+    
     # Validation methods
     @validates('name')
     def validate_name(self, key: str, name: str) -> str:
