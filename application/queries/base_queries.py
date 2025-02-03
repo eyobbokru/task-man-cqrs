@@ -74,11 +74,14 @@ class BaseQueryHandler(Generic[T, F]):
         conditions = []
         
         for field, value in filters.__dict__.items():
-            if value is not None and hasattr(self.model, field):
+           
+            if value is not None and hasattr(self.model, field) and not field.endswith('_like'):
                 if isinstance(value, str) and field.endswith('_like'):
                     # Handle case-insensitive string search
                     field_name = field.replace('_like', '')
                     conditions.append(getattr(self.model, field_name).ilike(f"%{value}%"))
+                elif isinstance(value, bool):
+                    conditions.append(getattr(self.model, field).is_(value))
                 else:
                     conditions.append(getattr(self.model, field) == value)
         

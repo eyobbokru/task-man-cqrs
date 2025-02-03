@@ -32,14 +32,14 @@ class GetWorkspacesQuery(BaseQueryHandler[Workspace, WorkspaceFilters]):
 
     def _build_filters(self, query: Select, filters: WorkspaceFilters) -> Select:
         """Apply filters to the query."""
-        conditions = []
+        
+        query = super()._build_filters(query, filters)
         
         if filters.created_after:
             query = query.where(Workspace.created_at >= filters.created_after)
 
         if filters.created_before:
             query = query.where(Workspace.created_at <= filters.created_before)
-        
         return query
 
     async def execute(
