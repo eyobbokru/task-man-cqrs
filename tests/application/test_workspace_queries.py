@@ -3,6 +3,7 @@
 import pytest
 from application.commands.workspace_commands import CreateWorkspaceCommand
 from application.queries.workspace_queries import GetWorkspaceByIdQuery, GetWorkspacesQuery, PaginationParams, WorkspaceFilters
+from domain.models.workspace import Workspace
 
 @pytest.fixture
 async def workspace_factory(db_session):
@@ -42,7 +43,7 @@ class TestWorkspaceQueries:
         # Arrange
         await workspace_factory(title="First Workspace", plan_type="free")
         await workspace_factory(title="Second Workspace", plan_type="pro")
-        query = GetWorkspacesQuery()
+        query = GetWorkspacesQuery(Workspace)
         
         # Act
         result = await query.execute(
@@ -61,7 +62,7 @@ class TestWorkspaceQueries:
             await workspace_factory(title=f"Workspace {i}")
             for i in range(5)
         ]
-        query = GetWorkspacesQuery()
+        query = GetWorkspacesQuery(Workspace)
         
         # Act
         result = await query.execute(

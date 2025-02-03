@@ -74,7 +74,7 @@ async def get_workspaces(
     
     Requires authentication. Returns paginated list of workspaces.
     """
-    query = GetWorkspacesQuery()
+    query = GetWorkspacesQuery(Workspace)
     filters = WorkspaceFilters(
         title=title,
         plan_type=plan_type,

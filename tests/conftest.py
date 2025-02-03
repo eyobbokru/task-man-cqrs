@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+from uuid import UUID
 import pytest
 import asyncio
 from typing import AsyncGenerator, Generator
@@ -131,3 +133,65 @@ async def client(test_app: FastAPI) -> AsyncGenerator[AsyncClient, None]:
 #         follow_redirects=True
 #     ) as test_client:
 #         yield test_client
+
+@pytest.fixture
+def sample_uuid():
+    return UUID('12345678-1234-5678-1234-567812345678')
+
+@pytest.fixture
+def sample_workspace_data():
+    return {
+        "title": "Test Workspace",
+        "description": "Test Description",
+        "plan_type": "free",
+        "settings": {"theme": "light"},
+        "is_completed": False
+    }
+
+# If you want to customize settings, create a separate fixture factory:
+@pytest.fixture
+def make_workspace_data():
+    def _make_workspace_data(custom_settings=None):
+        return {
+            "title": "Test Workspace",
+            "description": "Test Description",
+            "plan_type": "free",
+            "settings": custom_settings or {"theme": "light"},
+            "is_completed": False
+        }
+    return _make_workspace_data
+
+@pytest.fixture
+def sample_team_data():
+    return {
+        "name": "Test Team",
+        "description": "Test Description",
+        "workspace_id": UUID('12345678-1234-5678-1234-567812345678'),
+        "owner_id": UUID('87654321-4321-8765-4321-876543210987'),
+        "settings": {"default_role": "member"},
+        "is_active": True
+    }
+
+@pytest.fixture
+def sample_user_data():
+    return {
+        "email": "test@example.com",
+        "name": "Test User",
+        "password_hash": "hashed_password",
+        "profile": {"avatar": "default.jpg", "timezone": "UTC"},
+        "preferences": {"theme": "dark"}, 
+     
+    }
+
+@pytest.fixture
+def sample_team_member_data():
+    return {
+        "team_id": UUID('12345678-1234-5678-1234-567812345678'),
+        "user_id": UUID('87654321-4321-8765-4321-876543210987'),
+        "role": "member",
+        "permissions": {"can_invite": True}
+    }
+
+@pytest.fixture
+def current_time():
+    return datetime.now(timezone.utc)

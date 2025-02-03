@@ -118,7 +118,7 @@ class User(Base):
             
             # Validate required profile fields if present
             if 'timezone' in profile and not isinstance(profile['timezone'], str):
-                raise ValueError("Timezone must be a string")
+                raise ValueError("Invalid timezone")
             if 'phone' in profile and not isinstance(profile['phone'], str):
                 raise ValueError("Phone must be a string")
             if 'avatar' in profile and not isinstance(profile['avatar'], str):
@@ -131,7 +131,7 @@ class User(Base):
         """Validate the user preferences."""
         if preferences is not None and not isinstance(preferences, dict):
             raise ValueError("Preferences must be a dictionary")
-        return preferences
+        return preferences or {}
 
     def __repr__(self) -> str:
         """Return string representation of the user."""
